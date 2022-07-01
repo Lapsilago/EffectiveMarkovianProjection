@@ -94,3 +94,17 @@ def get_emp_locvol(T,x,params):
     # return function from Proposition 2.3
     return C_vec**2*a_emp**2*np.exp(G_emp)*(1 + 2*b_emp*z_vec + c_emp*z_vec**2)
 
+
+"""
+Get the EMP projected volatility function \sigma_{proj}^2(t,x) for a full surface
+"""
+def get_emp_locvol_surface(time_grid,strike_grid,params):
+    # (t,K) surface 
+    locvol_surface = np.empty((len(time_grid),len(strike_grid)))
+    
+    # compute values for all maturity/strike combinations
+    for time_index in np.arange(0,len(time_grid),1):
+        locvol_surface[time_index,:] = get_emp_locvol(time_grid[time_index],strike_grid,params)
+    
+    return locvol_surface
+

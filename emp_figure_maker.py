@@ -35,6 +35,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import set_parametrization as set_param
+from mpl_toolkits.mplot3d import Axes3D
 
 
 #%% Figures 1 and 2
@@ -279,6 +280,84 @@ def make_figure_13(strikes,iv_zabr_v1_v1,iv_zabr_v2_v2,iv_zabr_v3_v3):
     
     ax.set(xlabel='strike', ylabel='implied volatility', title= 'Mid-Curve Rate')
     ax.legend(fontsize ='x-small')
+    
+    plt.show()
+    return
+
+
+#%% SLV Figure 1
+
+"""
+Figure displays the projected variance surface
+"""
+def make_figure_slv_1(slv_surface, market_surface, strike_grid, time_grid):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    
+    # projected variance surface
+    strike_grid_plot, time_grid_plot = np.meshgrid(strike_grid, time_grid)
+    
+    ax.plot_surface(time_grid_plot, strike_grid_plot, market_surface*10000, label = "Market")
+    ax.plot_surface(time_grid_plot, strike_grid_plot, slv_surface*10000, label = "SLV-nSABR")
+    
+    ax.set_xlabel('Maturity')
+    ax.set_ylabel('Moneyness')
+    ax.set_title('Projected variance in bp')
+    
+    plt.show()
+    return
+
+
+#%% SLV Figure 2
+
+"""
+Figure displays the projected variance for the slv-nSABR model
+"""
+def make_figure_slv_2_projvol(projvol_slv, strike_grid_slv,
+                              projvol_market, strike_grid_market,
+                              parameter_cases, maturity):
+    fig, ax = plt.subplots()
+    
+    ax.plot(strike_grid_market, projvol_market*10000, label = "Market")
+    
+    for case in np.arange(0,len(projvol_slv[:,0])):
+        ax.plot(strike_grid_slv, projvol_slv[case,:]*10000,
+                label = str(str(parameter_cases[case])),
+                drawstyle='steps-post')
+    
+    yearstring = "years"
+    if maturity == 1:
+        yearstring = "year"
+    
+    ax.set(xlabel='moneyness', ylabel='projected variance',
+      title= str('Projected variance for a maturity of ' + str(maturity) + ' ' + str(yearstring) +' in bp'))
+    ax.legend()
+    
+    plt.show()
+    return
+
+
+"""
+Figure displays the implied volatility for the slv-nSABR model
+"""
+def make_figure_slv_2_iv(iv_slv, strike_grid_slv,
+                         iv_market, strike_grid_market,
+                         parameter_cases, maturity):
+    fig, ax = plt.subplots()
+    
+    ax.plot(strike_grid_market, iv_market*10000, label = "Market")
+    
+    for case in np.arange(0,len(iv_slv[:,0])):
+        ax.plot(strike_grid_slv, iv_slv[case,:]*10000,
+                label = str(str(parameter_cases[case])))
+    
+    yearstring = "years"
+    if maturity == 1:
+        yearstring = "year"
+    
+    ax.set(xlabel='moneyness', ylabel='implied volatility',
+      title= str('Implied volatility for a maturity of ' + str(maturity) + ' ' + str(yearstring) +' in bp'))
+    ax.legend()
     
     plt.show()
     return

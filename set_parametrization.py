@@ -37,7 +37,7 @@ from Models import Params
 """
 Return a ZABR model with parameters in accordance to Table 3
 """
-def set_ZABR_standard_parameters(set_number,case):
+def c(set_number,case):
     params = Params()
     params.model = "zabr"
     params.forward = 0.005
@@ -249,5 +249,22 @@ def set_market_parameters_1Y5Y():
     params_market.nu =  0.3
     params_market.rho = -0.7
     params_market.displacement = 0.
+    return params_market
+
+
+#%% Specifications for the SLV Example
+"""
+Return a ZABR model characterizing a market test surface
+"""
+def set_ZABR_standard_parameters_slv_surface():
+    params_market = Params()
+    params_market.model = "zabr"
+    params_market.forward = 0.005
+    params_market.beta = 0.4
+    params_market.gamma = 0.9
+    params_market.alpha = 0.3*params_market.forward**(1-params_market.beta)
+    params_market.nu =  0.3
+    params_market.rho = -0.7
+    params_market.displacement = 0.0011
     return params_market
 

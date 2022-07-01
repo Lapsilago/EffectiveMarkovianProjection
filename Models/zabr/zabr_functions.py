@@ -137,6 +137,25 @@ def fkm_func_E(T,F,params):
 These are the transformations used for the Hagan 1D PDE scheme
 """
 
+"""
+Expression Based on the locvol function used for the hagan 1D PDE:
+Return D(F)E(T,F) 
+Note that the locvol would correspond to D(F)sqrt(E(T,F))
+The Gamma function corresponds constantly to -C(f)'
+"""
+def fkm_func_locvol_haganscheme_emp_gamma(y,F,T,j0,nsteps,hh,params):
+    Dval = np.zeros(nsteps)
+    Dval[1:nsteps-1] = fkm_func_D(func_z_y(y[1:nsteps-1],params),F[1:nsteps-1],params)
+    
+    #Mirror Shadowpoints
+    Dval[0] = Dval[1]
+    Dval[nsteps-1] = Dval[nsteps - 2]
+    
+    Eval = np.ones(len(Dval))
+    Eval[1:nsteps-1] = fkm_func_E(T,params.forward,params)
+    
+    return Dval*Eval
+
 
 """
 Expression Based on the locvol function used for the hagan 1D PDE:
